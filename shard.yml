@@ -1,0 +1,23 @@
+name: sysrepo-crystal
+version: 0.1.0
+
+crystal: 0.33.0
+license: MIT
+
+authors:
+  - smalls12 <37202992+smalls12@users.noreply.github.com>
+
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+    version: ~> 0.11.0
+
+dependencies:
+  libyang-crystal:
+    version: ~> 0.1.0
+
+targets:
+  sysrepo:
+    main: src/sysrepo-crystal.cr
+
+description: Bindings for sysrepo
