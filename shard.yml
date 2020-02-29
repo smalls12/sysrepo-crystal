@@ -14,7 +14,7 @@ development_dependencies:
 
 dependencies:
   libyang-crystal:
-    version: ~> 0.1.0
+    git: https://github.com/smalls12/libyang-crystal.git
 
 targets:
   sysrepo:
