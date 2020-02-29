@@ -1,3 +1,5 @@
+require "libyang-crystal"
+
 require "./enums"
 require "./types"
 
