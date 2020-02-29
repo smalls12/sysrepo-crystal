@@ -12,10 +12,13 @@ class Session
   def initialize(@session : Libsysrepo::SessionContext*)
   end
 
-
   def session_start(connection : Connection)
     puts "Start session..."
     Libsysrepo.sr_session_start(connection.connection, Libsysrepo::SysrepoDatastore::SR_DS_RUNNING, pointerof(@session) )
+  end
+
+  def get_context()
+    Libsysrepo.sr_get_context( Libsysrepo.sr_session_get_connection( @session ) )
   end
 
   def session_stop()

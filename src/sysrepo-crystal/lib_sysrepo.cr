@@ -1,5 +1,3 @@
-require "libyang-crystal"
-
 require "./enums"
 require "./types"
 
@@ -23,7 +21,7 @@ lib Libsysrepo
 
     # const struct ly_ctx *sr_get_context(sr_conn_ctx_t *conn);
     # sr_conn_ctx_t *sr_session_get_connection(sr_session_ctx_t *session);
-  fun sr_get_context( conn : ConnectionContext* ) : LibyangContext
+  fun sr_get_context( conn : ConnectionContext* ) : Libyang::LibyangContext*
   fun sr_session_get_connection( session : SessionContext* ) : ConnectionContext*
 
   fun sr_get_session_ctx() : SessionContext*

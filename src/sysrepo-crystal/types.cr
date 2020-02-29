@@ -6,12 +6,9 @@ lib Libsysrepo
     type SessionContext = Void
     type SubscriptionContext = Void
 
-    type LibyangContext = Void
-    type LibyangData = Void
-
     type SysrepoLoggingCallback = SysrepoLoggingLevel, LibC::Char* -> Void
     type SysrepoModuleChangeCallback = SessionContext*, LibC::Char*, LibC::Char*, SysrepoEvent, LibC::UInt32T, Void* -> LibC::Int32T
-    type SysrepoOperGetItemsCallback = SessionContext*, LibC::Char*, LibC::Char*, LibC::Char*, LibC::UInt32T, LibyangData**, Void* -> LibC::Int32T
+    type SysrepoOperGetItemsCallback = SessionContext*, LibC::Char*, LibC::Char*, LibC::Char*, LibC::UInt32T, Libyang::LibyangDataNode**, Void* -> LibC::Int32T
 
     type PrivateData = Void
 

@@ -1,3 +1,5 @@
+require "libyang-crystal/data-node"
+
 require "./sysrepo-crystal"
 require "./session.cr"
 require "./callback.cr"
@@ -6,8 +8,6 @@ MODULE_CHANGE_HIDDEN = ->( session : Libsysrepo::SessionContext*, module_name : 
 event : Libsysrepo::SysrepoEvent, request_id : LibC::UInt32T, private_data : Void* )
 {
   puts " === MODULE_CHANGE_INTERNAL === "
-
-  
 
   # build strings from libc::char*
   if module_name.null?  
@@ -35,9 +35,37 @@ event : Libsysrepo::SysrepoEvent, request_id : LibC::UInt32T, private_data : Voi
 }
 
 OPER_DATA_HIDDEN = ->( session : Libsysrepo::SessionContext*, module_name : LibC::Char*, path : LibC::Char*,
-request_xpath : LibC::Char*, request_id : LibC::UInt32T, parent : Libsysrepo::LibyangData**, private_data : Void* )
+request_xpath : LibC::Char*, request_id : LibC::UInt32T, parent : Libyang::LibyangDataNode**, private_data : Void* )
 {
   puts " === OPER_DATA_INTERNAL === "
+
+  # build strings from libc::char*
+  if module_name.null?  
+    module_name_str = nil
+  else
+    module_name_str = String.new(module_name)
+  end
+
+  if path.null?
+    path_str = nil
+  else
+    path_str = String.new(path)
+  end
+
+  if request_xpath.null?  
+    request_xpath_str = nil
+  else
+    request_xpath_str = String.new(request_xpath)
+  end
+
+  tree = DataNode.new(parent.value)
+
+  # pass blank private data for now
+  data = Pointer(Void).malloc(0)
+  # unbox the data passed in
+  data_as_callback = Box(Callback).unbox(private_data)
+  # call the callback
+  data_as_callback.oper_data_cb.not_nil!.call(Session.new(session), module_name_str, path_str, request_xpath_str, request_id, pointerof(tree), data)
 
   puts " === OPER_DATA_INTERNAL === "
   
