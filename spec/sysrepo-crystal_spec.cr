@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-describe Sysrepo do
+describe "Libsysrepo" do
   # TODO: Write tests
 
 

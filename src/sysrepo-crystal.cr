@@ -1,4 +1,4 @@
 require "./sysrepo-crystal/*"
 
-module Sysrepo
+lib Libsysrepo
 end
