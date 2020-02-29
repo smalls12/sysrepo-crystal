@@ -8,7 +8,7 @@ lib Libsysrepo
     SR_LL_DBG
   end
 
-  enum CONNECTION_OPTIONS
+  enum SysrepoConnectionOptions
     DEFAULT
   end
 
@@ -19,7 +19,7 @@ lib Libsysrepo
     SR_DS_OPERATIONAL
   end
 
-  enum SysrepoType 
+  enum SysrepoType
     SR_UNKNOWN_T
     SR_LIST_T
     SR_CONTAINER_T

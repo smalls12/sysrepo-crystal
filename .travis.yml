@@ -5,9 +5,8 @@ before_install: make
 install:
   - shards install
 
-# script:
-#   - make spec
-#   - bin/ameba
+script:
+  - bin/ameba
 
 sudo: required
 email: false

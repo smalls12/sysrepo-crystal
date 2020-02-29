@@ -16,9 +16,9 @@ lib Libsysrepo
   # ////////////////////////////////////////////////////////////////////////////////
   # // Connection / Session Management
   # ////////////////////////////////////////////////////////////////////////////////
-    
+
   fun sr_get_connection_ctx() : ConnectionContext*
-  fun sr_connect( opts : CONNECTION_OPTIONS, conn : ConnectionContext** ) : LibC::Int
+  fun sr_connect( opts : SysrepoConnectionOptions, conn : ConnectionContext** ) : LibC::Int
   fun sr_disconnect( conn : ConnectionContext* ) : LibC::Int
 
     # const struct ly_ctx *sr_get_context(sr_conn_ctx_t *conn);
@@ -48,7 +48,7 @@ lib Libsysrepo
   fun sr_module_change_subscribe( session : SessionContext*, module_name : LibC::Char*, xpath : LibC::Char*,
      callback : SysrepoModuleChangeCallback, private_data : Void*, priority : LibC::UInt32T, opts : SysrepoSubscriptionOptions,
      subscription : SubscriptionContext** ) : LibC::Int
-    
+
   # ////////////////////////////////////////////////////////////////////////////////
   # // Operational Data API
   # ////////////////////////////////////////////////////////////////////////////////

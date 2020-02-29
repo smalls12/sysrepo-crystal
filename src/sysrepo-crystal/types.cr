@@ -32,7 +32,7 @@ lib Libsysrepo
         anyxml_val : LibC::Char*
         anydata_val : LibC::Char*
     end
-    
+
     struct SysrepoValue
         xpath : LibC::Char*
         type : SysrepoType

@@ -10,7 +10,7 @@ class Connection
 
   def connect()
     puts "Connecting..."
-    Libsysrepo.sr_connect(Libsysrepo::CONNECTION_OPTIONS::DEFAULT, pointerof(@connection))
+    Libsysrepo.sr_connect(Libsysrepo::SysrepoConnectionOptions::DEFAULT, pointerof(@connection))
   end
 
   def disconnect()
