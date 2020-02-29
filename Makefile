@@ -5,7 +5,7 @@ all:
 	cd libyang/build; \
 	cmake ..; \
 	make; \
-	export PATH=$PATH:$PWD/
+	sudo make install
 
 	# build sysrepo
 	git clone --depth=1 https://github.com/sysrepo/sysrepo.git
@@ -13,5 +13,5 @@ all:
 	cd sysrepo/build; \
 	cmake ..; \
 	make; \
-	export PATH=$PATH:$PWD/
+	sudo make install
 	

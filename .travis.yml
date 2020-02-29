@@ -9,5 +9,5 @@ install:
 #   - make spec
 #   - bin/ameba
 
-sudo: false
+sudo: required
 email: false
