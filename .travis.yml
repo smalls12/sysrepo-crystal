@@ -1,6 +1,6 @@
 language: crystal
 
-before_install: sudo make
+before_install: make
 
 install:
   - shards install

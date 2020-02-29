@@ -5,13 +5,13 @@ all:
 	cd libyang/build; \
 	cmake ..; \
 	make; \
-	make install
+	export PATH=$PATH:$PWD/
 
 	# build sysrepo
 	git clone --depth=1 https://github.com/sysrepo/sysrepo.git
-	mkdir -p libyang/build; \
-	cd libyang/build; \
+	mkdir -p sysrepo/build; \
+	cd sysrepo/build; \
 	cmake ..; \
 	make; \
-	make install
+	export PATH=$PATH:$PWD/
 	
