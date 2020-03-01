@@ -50,14 +50,30 @@ request_xpath : LibC::Char*, request_id : LibC::UInt32T, parent : Libyang::Libya
     request_xpath_str = String.new(request_xpath)
   end
 
-  tree = DataNode.new(parent.value)
-
   # pass blank private data for now
   data = Pointer(Void).malloc(0)
   # unbox the data passed in
   data_as_callback = Box(Callback).unbox(private_data)
-  # call the callback
-  data_as_callback.oper_data_cb.not_nil!.call(Session.new(session), module_name_str, path_str, request_xpath_str, request_id, pointerof(tree), data)
+
+  if parent.value.null?
+    tree = DataNode.new(nil)
+
+    # call the callback
+    data_as_callback.oper_data_cb.not_nil!.call(Session.new(session), module_name_str, path_str, request_xpath_str, request_id, tree, data)
+
+    if tree.node.nil?
+    else
+      parent.value = Libyang.lyd_dup(tree.node, 0x01);
+    end
+
+  else
+    tree = DataNode.new(parent.value)
+
+    # call the callback
+    data_as_callback.oper_data_cb.not_nil!.call(Session.new(session), module_name_str, path_str, request_xpath_str, request_id, tree, data)
+  end
+
+  0
 }
 
 class Subscribe
