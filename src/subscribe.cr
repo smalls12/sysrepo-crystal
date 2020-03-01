@@ -7,8 +7,6 @@ require "./callback.cr"
 MODULE_CHANGE_HIDDEN = ->( session : Libsysrepo::SessionContext*, module_name : LibC::Char*, xpath : LibC::Char*,
 event : Libsysrepo::SysrepoEvent, request_id : LibC::UInt32T, private_data : Void* )
 {
-  puts " === MODULE_CHANGE_INTERNAL === "
-
   # build strings from libc::char*
   if module_name.null?
     module_name_str = nil
@@ -28,15 +26,11 @@ event : Libsysrepo::SysrepoEvent, request_id : LibC::UInt32T, private_data : Voi
   data_as_callback = Box(Callback).unbox(private_data)
   # call the callback
   data_as_callback.module_change_cb.call(Session.new(session), module_name_str, xpath_str, event, request_id, data)
-
-  puts " === MODULE_CHANGE_INTERNAL === "
 }
 
 OPER_DATA_HIDDEN = ->( session : Libsysrepo::SessionContext*, module_name : LibC::Char*, path : LibC::Char*,
 request_xpath : LibC::Char*, request_id : LibC::UInt32T, parent : Libyang::LibyangDataNode**, private_data : Void* )
 {
-  puts " === OPER_DATA_INTERNAL === "
-
   # build strings from libc::char*
   if module_name.null?
     module_name_str = nil
@@ -64,8 +58,6 @@ request_xpath : LibC::Char*, request_id : LibC::UInt32T, parent : Libyang::Libya
   data_as_callback = Box(Callback).unbox(private_data)
   # call the callback
   data_as_callback.oper_data_cb.not_nil!.call(Session.new(session), module_name_str, path_str, request_xpath_str, request_id, pointerof(tree), data)
-
-  puts " === OPER_DATA_INTERNAL === "
 }
 
 class Subscribe

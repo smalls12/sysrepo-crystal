@@ -20,4 +20,7 @@ targets:
   sysrepo:
     main: src/sysrepo-crystal.cr
 
+postinstall:
+  make postinst
+
 description: Bindings for sysrepo

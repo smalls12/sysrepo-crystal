@@ -5,7 +5,7 @@ require "./types"
 
 # @[Link("sysrepo-crystal")]
 # @[Link(ldflags: "-lsysrepo-crystal -lsysrepo")]
-@[Link(ldflags: "#{__DIR__}/../build/libsysrepo-crystal.a -lsysrepo")]
+@[Link(ldflags: "#{__DIR__}/libsysrepo-crystal.a -lsysrepo")]
 lib Libsysrepo
 
   # ////////////////////////////////////////////////////////////////////////////////
