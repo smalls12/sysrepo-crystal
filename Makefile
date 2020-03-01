@@ -19,7 +19,7 @@ build:
 	make; \
 	sudo make install
 
-postinstl:
+postinst:
 	# build the sysrepo shim for the crystal bindings
 	gcc -c src/sysrepo-crystal.c -o src/sysrepo-crystal/sysrepo-crystal.o
 	ar rcs src/sysrepo-crystal/libsysrepo-crystal.a src/sysrepo-crystal/sysrepo-crystal.o
