@@ -52,12 +52,20 @@ lib Libsysrepo
   # ////////////////////////////////////////////////////////////////////////////////
   # // Operational Data API
   # ////////////////////////////////////////////////////////////////////////////////
-
-    # int sr_oper_get_items_subscribe(sr_session_ctx_t *session, const char *module_name, const char *path,
-    #  sr_oper_get_items_cb callback, void *private_data, sr_subscr_options_t opts, sr_subscription_ctx_t **subscription);
   fun sr_oper_get_items_subscribe( session : SessionContext*, module_name : LibC::Char*, xpath : LibC::Char*,
     callback : SysrepoOperGetItemsCallback, private_data : Void*, opts : SysrepoSubscriptionOptions,
     subscription : SubscriptionContext** ) : LibC::Int
+
+
+  # ////////////////////////////////////////////////////////////////////////////////
+  # // RPC (Remote Procedure Calls) and Action API
+  # ////////////////////////////////////////////////////////////////////////////////
+
+  #  int sr_rpc_subscribe(sr_session_ctx_t *session, const char *xpath, sr_rpc_cb callback, void *private_data,
+  #  uint32_t priority, sr_subscr_options_t opts, sr_subscription_ctx_t **subscription);
+  fun sr_rpc_subscribe( session : SessionContext*, xpath : LibC::Char*,
+    callback : SysrepoRPCCallback, private_data : Void*, priority : LibC::UInt32T,
+    opts : SysrepoSubscriptionOptions, subscription : SubscriptionContext** ) : LibC::Int
 
 
   # int sr_print_val(const sr_val_t *value);

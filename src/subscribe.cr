@@ -76,6 +76,28 @@ request_xpath : LibC::Char*, request_id : LibC::UInt32T, parent : Libyang::Libya
   0
 }
 
+RPC_HIDDEN = ->( session : Libsysrepo::SessionContext*, op_path : LibC::Char*, input : Libsysrepo::SysrepoValue*, intput_cnt : LibC::UInt32T,
+event : Libsysrepo::SysrepoEvent, request_id : LibC::UInt32T, output : Libsysrepo::SysrepoValue**, output_cnt : LibC::UInt32T, private_data : Void* )
+{
+  puts "RPC CALLBACK INTERNAL"
+  
+  if op_path.null?
+    op_path_str = nil
+  else
+    op_path_str = String.new(op_path)
+  end
+
+  # pass blank private data for now
+  data = Pointer(Void).malloc(0)
+  # unbox the data passed in
+  data_as_callback = Box(Callback).unbox(private_data)
+
+  # call the callback
+  data_as_callback.rpc_cb.not_nil!.call(Session.new(session), op_path_str, input, intput_cnt, event, request_id, output, output_cnt, data)
+
+  0
+}
+
 class Subscribe
   getter session : Session
   getter subscription : Libsysrepo::SubscriptionContext*
@@ -102,6 +124,18 @@ class Subscribe
     boxed_data = Box.box(my_callback)
     # perform subscribe
     Libsysrepo.sr_oper_get_items_subscribe(@session.session, module_name, path, OPER_DATA_HIDDEN, boxed_data, opts, pointerof(@subscription) )
+  end
+
+  # int sr_rpc_subscribe(sr_session_ctx_t *session, const char *xpath, sr_rpc_cb callback, void *private_data,
+  #       uint32_t priority, sr_subscr_options_t opts, sr_subscription_ctx_t **subscription);
+
+  def sr_rpc_subscribe(xpath : String, external_callback, private_data : Void*, priority : UInt32, opts : Libsysrepo::SysrepoSubscriptionOptions)
+    # build callback wrapper
+    my_callback = Callback.new(external_callback)
+    # box the data to pass down to libsysrepo
+    boxed_data = Box.box(my_callback)
+    # perform subscribe
+    Libsysrepo.sr_rpc_subscribe(@session.session, xpath, RPC_HIDDEN, boxed_data, priority, opts, pointerof(@subscription) )
   end
 
   def unsubscribe
