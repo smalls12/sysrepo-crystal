@@ -79,8 +79,6 @@ request_xpath : LibC::Char*, request_id : LibC::UInt32T, parent : Libyang::Libya
 RPC_HIDDEN = ->( session : Libsysrepo::SessionContext*, op_path : LibC::Char*, input : Libsysrepo::SysrepoValue*, intput_cnt : LibC::UInt32T,
 event : Libsysrepo::SysrepoEvent, request_id : LibC::UInt32T, output : Libsysrepo::SysrepoValue**, output_cnt : LibC::UInt32T, private_data : Void* )
 {
-  puts "RPC CALLBACK INTERNAL"
-  
   if op_path.null?
     op_path_str = nil
   else
