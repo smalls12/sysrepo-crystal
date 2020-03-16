@@ -28,6 +28,7 @@ class CrystalSysrepoValue
     property origin : String | Nil
     property data : CrystalSysrepoData | Nil
 
+    # ameba:disable Metrics/CyclomaticComplexity
     def to_s(io)
         io << "["
         io << "\nxpath :: " << xpath

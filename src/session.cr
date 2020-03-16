@@ -26,30 +26,29 @@ class Session
 
   def get_item(path, timeout)
     # get the value from sysrepo library
-    sysrepoValue = Libsysrepo.sr_get_value
-    Libsysrepo.sr_get_item(@session, path, timeout, pointerof(sysrepoValue))
+    sysrepo_value = Libsysrepo.sr_get_value
+    Libsysrepo.sr_get_item(@session, path, timeout, pointerof(sysrepo_value))
 
     # convert to a crystallized structure
-    crystalValue = convertSysrepoValueToCrystalSysrepoValue(sysrepoValue)
+    crystal_value = convert_sysrepo_value_to_crystal_sysrepo_value(sysrepo_value)
 
     # release memory from sysrepo library
-    Libsysrepo.sr_free_val(sysrepoValue)
+    Libsysrepo.sr_free_val(sysrepo_value)
 
-    crystalValue
+    crystal_value
   end
 
   def get_items(xpath, timeout)
-    sysrepoValues = Libsysrepo.sr_get_value
-    sysrepoValuesCount = uninitialized UInt32
+    sysrepo_values = Libsysrepo.sr_get_value
+    sysrepo_values_count = uninitialized UInt32
 
-    Libsysrepo.sr_get_items(@session, xpath, timeout, Libsysrepo::SysrepoGetOperationOptions::DEFAULT, pointerof(sysrepoValues), pointerof(sysrepoValuesCount))
-    # Array(Libsysrepo::SysrepoValue*).new(value_cnt) { |i| value + i }
-    crystalValues = Array(CrystalSysrepoValue).new(sysrepoValuesCount) { |i| convertSysrepoValueToCrystalSysrepoValue(sysrepoValues + i) }
+    Libsysrepo.sr_get_items(@session, xpath, timeout, Libsysrepo::SysrepoGetOperationOptions::DEFAULT, pointerof(sysrepo_values), pointerof(sysrepo_values_count))
+    crystal_values = Array(CrystalSysrepoValue).new(sysrepo_values_count) { |i| convert_sysrepo_value_to_crystal_sysrepo_value(sysrepo_values + i) }
 
     # release memory from sysrepo library
-    Libsysrepo.sr_free_values(sysrepoValues, sysrepoValuesCount)
+    Libsysrepo.sr_free_values(sysrepo_values, sysrepo_values_count)
 
-    crystalValues
+    crystal_values
   end
 
   def rpc_send(path, input, input_cnt)
