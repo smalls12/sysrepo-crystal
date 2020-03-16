@@ -4,7 +4,7 @@ lib Libsysrepo
 
     type PrivateData = Void
 
-    struct SysrepoData
+    union SysrepoData
         binary_val : LibC::Char*
         bits_val : LibC::Char*
         bool_val : Bool
@@ -30,7 +30,7 @@ lib Libsysrepo
         type : SysrepoType
         dflt : Bool
         origin : LibC::Char*
-        data : LibC::Int
+        data : SysrepoData
     end
 
     type ConnectionContext = Void

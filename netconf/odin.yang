@@ -8,6 +8,11 @@ module odin {
           type uint8;
           default 8;
       }
+
+      leaf okay {
+          type uint16;
+          default 16;
+      }
   }
 
   container stateData {

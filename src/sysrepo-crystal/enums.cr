@@ -46,6 +46,10 @@ lib Libsysrepo
     SR_ANYDATA_T
   end
 
+  enum SysrepoGetOperationOptions
+    DEFAULT
+  end
+
   enum SysrepoEvent
     SR_EV_UPDATE
     SR_EV_CHANGE

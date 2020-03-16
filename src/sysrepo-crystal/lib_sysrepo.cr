@@ -35,6 +35,9 @@ lib Libsysrepo
   # ////////////////////////////////////////////////////////////////////////////////
   fun sr_get_value() : SysrepoValue*
   fun sr_get_item( session : SessionContext*, path : LibC::Char*, timeout_ms : LibC::Int, value : SysrepoValue** ) : LibC::Int
+  fun sr_get_items( session : SessionContext*, xpath : LibC::Char*, timeout_ms : LibC::UInt32T, opts : SysrepoGetOperationOptions, values : SysrepoValue**, value_cnt : LibC::UInt32T* ) : LibC::Int
+  fun sr_free_val( value : SysrepoValue* ) : Void
+  fun sr_free_values( values : SysrepoValue*, count : LibC::UInt32T ) : Void
 
   # ////////////////////////////////////////////////////////////////////////////////
   # // Subscription API
@@ -56,17 +59,16 @@ lib Libsysrepo
     callback : SysrepoOperGetItemsCallback, private_data : Void*, opts : SysrepoSubscriptionOptions,
     subscription : SubscriptionContext** ) : LibC::Int
 
-
   # ////////////////////////////////////////////////////////////////////////////////
   # // RPC (Remote Procedure Calls) and Action API
   # ////////////////////////////////////////////////////////////////////////////////
-
-  #  int sr_rpc_subscribe(sr_session_ctx_t *session, const char *xpath, sr_rpc_cb callback, void *private_data,
-  #  uint32_t priority, sr_subscr_options_t opts, sr_subscription_ctx_t **subscription);
   fun sr_rpc_subscribe( session : SessionContext*, xpath : LibC::Char*,
     callback : SysrepoRPCCallback, private_data : Void*, priority : LibC::UInt32T,
     opts : SysrepoSubscriptionOptions, subscription : SubscriptionContext** ) : LibC::Int
 
+  fun sr_rpc_send( session : SessionContext*, path : LibC::Char*,
+    input : SysrepoValue*, input_cnt : LibC::UInt32T, timeout_ms : LibC::UInt32T,
+    output : SysrepoValue**, output_cnt : LibC::UInt32T* ) : LibC::Int
 
   # int sr_print_val(const sr_val_t *value);
   fun sr_print_val( value : SysrepoValue* ) : LibC::Int
