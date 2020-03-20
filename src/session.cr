@@ -53,8 +53,21 @@ class Session
     crystal_values
   end
 
+  def set_item(path, crystal_value)
+    sysrepo_value = Libsysrepo.sr_get_value
+    Libsysrepo.sr_new_values(1, pointerof(sysrepo_value))
+
+    convert_crystal_sysrepo_value_to_sysrepo_value(crystal_value, sysrepo_value)
+
+    # set item from sysrepo library
+    Libsysrepo.sr_set_item(@session, path, sysrepo_value, Libsysrepo::SysrepoEditOptions::DEFAULT)
+  end
+
+  def apply_changes(timeout, wait)
+    Libsysrepo.sr_apply_changes(@session, timeout, wait)
+  end
+
   def rpc_send(path, input, input_cnt)
-    puts "RPC send..."
     output = Libsysrepo.sr_get_value
     output_cnt = uninitialized UInt32
 

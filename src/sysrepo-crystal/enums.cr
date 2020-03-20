@@ -50,6 +50,10 @@ lib Libsysrepo
     DEFAULT
   end
 
+  enum SysrepoEditOptions
+    DEFAULT
+  end
+
   enum SysrepoEvent
     SR_EV_UPDATE
     SR_EV_CHANGE

@@ -40,6 +40,12 @@ lib Libsysrepo
   fun sr_free_values( values : SysrepoValue*, count : LibC::UInt32T ) : Void
 
   # ////////////////////////////////////////////////////////////////////////////////
+  # // Data Manipulation API (edit-config functionality)
+  # ////////////////////////////////////////////////////////////////////////////////
+  fun sr_set_item( session : SessionContext*, path : LibC::Char*, value : SysrepoValue*, opts : SysrepoEditOptions ) : LibC::Int
+  fun sr_apply_changes( session : SessionContext*, timeout_ms : LibC::UInt32T, wait : LibC::Int ) : LibC::Int
+
+  # ////////////////////////////////////////////////////////////////////////////////
   # // Subscription API
   # ////////////////////////////////////////////////////////////////////////////////
   fun sr_unsubscribe( subscription : SubscriptionContext* ) : LibC::Int*
