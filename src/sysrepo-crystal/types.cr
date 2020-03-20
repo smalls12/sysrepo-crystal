@@ -40,6 +40,6 @@ lib Libsysrepo
     type SysrepoLoggingCallback = SysrepoLoggingLevel, LibC::Char* -> Void
     type SysrepoModuleChangeCallback = SessionContext*, LibC::Char*, LibC::Char*, SysrepoEvent, LibC::UInt32T, Void* -> LibC::Int32T
     type SysrepoOperGetItemsCallback = SessionContext*, LibC::Char*, LibC::Char*, LibC::Char*, LibC::UInt32T, Libyang::LibyangDataNode**, Void* -> LibC::Int32T
-    type SysrepoRPCCallback = SessionContext*, LibC::Char*, SysrepoValue*, LibC::UInt32T, SysrepoEvent, LibC::UInt32T, SysrepoValue**, LibC::UInt32T, Void* -> LibC::Int32T
+    type SysrepoRPCCallback = SessionContext*, LibC::Char*, SysrepoValue*, LibC::UInt32T, SysrepoEvent, LibC::UInt32T, SysrepoValue**, LibC::UInt32T*, Void* -> LibC::Int32T
 
 end

@@ -25,7 +25,7 @@ class Session
   end
 
   def get_item(path, timeout)
-    # get the value from sysrepo library
+    # get item from sysrepo library
     sysrepo_value = Libsysrepo.sr_get_value
     Libsysrepo.sr_get_item(@session, path, timeout, pointerof(sysrepo_value))
 
@@ -39,10 +39,12 @@ class Session
   end
 
   def get_items(xpath, timeout)
+    # get items from sysrepo library
     sysrepo_values = Libsysrepo.sr_get_value
     sysrepo_values_count = uninitialized UInt32
-
     Libsysrepo.sr_get_items(@session, xpath, timeout, Libsysrepo::SysrepoGetOperationOptions::DEFAULT, pointerof(sysrepo_values), pointerof(sysrepo_values_count))
+
+    # convert to a crystallized structure
     crystal_values = Array(CrystalSysrepoValue).new(sysrepo_values_count) { |i| convert_sysrepo_value_to_crystal_sysrepo_value(sysrepo_values + i) }
 
     # release memory from sysrepo library

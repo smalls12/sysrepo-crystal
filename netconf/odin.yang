@@ -34,6 +34,9 @@ module odin {
       }
     }
     output {
+      leaf ugh {
+        type uint8;
+      }
       leaf status {
         type string;
         must ". != 'invalid status'";

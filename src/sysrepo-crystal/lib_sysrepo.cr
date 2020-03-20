@@ -70,7 +70,11 @@ lib Libsysrepo
     input : SysrepoValue*, input_cnt : LibC::UInt32T, timeout_ms : LibC::UInt32T,
     output : SysrepoValue**, output_cnt : LibC::UInt32T* ) : LibC::Int
 
-  # int sr_print_val(const sr_val_t *value);
+  fun sr_new_values( value_cnt : LibC::UInt32T, values : SysrepoValue** ) : LibC::Int
+
+  fun sr_val_set_str_data( values : SysrepoValue*, type : SysrepoType, string_val : LibC::Char* ) : LibC::Int
+  fun sr_val_set_xpath( value : SysrepoValue*, xpath : LibC::Char* ) : LibC::Int
+
   fun sr_print_val( value : SysrepoValue* ) : LibC::Int
 
 end

@@ -76,8 +76,8 @@ request_xpath : LibC::Char*, request_id : LibC::UInt32T, parent : Libyang::Libya
   0
 }
 
-RPC_HIDDEN = ->( session : Libsysrepo::SessionContext*, op_path : LibC::Char*, input : Libsysrepo::SysrepoValue*, intput_cnt : LibC::UInt32T,
-event : Libsysrepo::SysrepoEvent, request_id : LibC::UInt32T, output : Libsysrepo::SysrepoValue**, output_cnt : LibC::UInt32T, private_data : Void* )
+RPC_HIDDEN = ->( session : Libsysrepo::SessionContext*, op_path : LibC::Char*, input : Libsysrepo::SysrepoValue*, input_cnt : LibC::UInt32T,
+event : Libsysrepo::SysrepoEvent, request_id : LibC::UInt32T, output : Libsysrepo::SysrepoValue**, output_cnt : LibC::UInt32T*, private_data : Void* )
 {
   if op_path.null?
     op_path_str = nil
@@ -90,8 +90,24 @@ event : Libsysrepo::SysrepoEvent, request_id : LibC::UInt32T, output : Libsysrep
   # unbox the data passed in
   data_as_callback = Box(Callback).unbox(private_data)
 
+  # convert input values to a crystallized structure
+  crystal_input_values = Array(CrystalSysrepoValue).new(input_cnt) { |i| convert_sysrepo_value_to_crystal_sysrepo_value(input + i) }
+  crystal_output_values = Array(CrystalSysrepoValue).new
+
   # call the callback
-  data_as_callback.rpc_cb.not_nil!.call(Session.new(session), op_path_str, input, intput_cnt, event, request_id, output, output_cnt, data)
+  data_as_callback.rpc_cb.not_nil!.call(Session.new(session), op_path_str, crystal_input_values, event, request_id, crystal_output_values, data)
+
+  # convert crystal sysrepo values int sysrepo values
+  _count = crystal_output_values.size.to_u32
+  _output = Libsysrepo.sr_get_value
+  Libsysrepo.sr_new_values(_count, pointerof(_output))
+
+  for x = 0, x < _count, x += 1 do
+    convert_crystal_sysrepo_value_to_sysrepo_value(crystal_output_values[x], _output + x)
+  end
+
+  output.value = _output
+  output_cnt.value = _count
 
   0
 }
