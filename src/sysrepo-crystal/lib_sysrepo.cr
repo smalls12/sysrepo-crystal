@@ -76,6 +76,15 @@ lib Libsysrepo
     input : SysrepoValue*, input_cnt : LibC::UInt32T, timeout_ms : LibC::UInt32T,
     output : SysrepoValue**, output_cnt : LibC::UInt32T* ) : LibC::Int
 
+  # ////////////////////////////////////////////////////////////////////////////////
+  # // Notifications API
+  # ////////////////////////////////////////////////////////////////////////////////
+  fun sr_event_notif_subscribe( session : SessionContext*, module_name : LibC::Char*, xpath : LibC::Char*,
+    start_time : SysrepoTime, stop_time : SysrepoTime, callback : SysrepoEventCallback, private_data : Void*,
+    opts : SysrepoSubscriptionOptions, subscription : SubscriptionContext** ) : LibC::Int
+
+  fun sr_event_notif_send( session : SessionContext*, path : LibC::Char*, values : SysrepoValue*, values_cnt : LibC::UInt32T) : LibC::Int
+
   fun sr_new_values( value_cnt : LibC::UInt32T, values : SysrepoValue** ) : LibC::Int
 
   fun sr_val_set_str_data( values : SysrepoValue*, type : SysrepoType, string_val : LibC::Char* ) : LibC::Int

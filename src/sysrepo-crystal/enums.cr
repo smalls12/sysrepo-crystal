@@ -63,6 +63,13 @@ lib Libsysrepo
     SR_EV_RPC
   end
 
+  enum SysrepoEventNotificationType
+    SR_EV_NOTIF_REALTIME
+    SR_EV_NOTIF_REPLAY
+    SR_EV_NOTIF_REPLAY_COMPLETE
+    SR_EV_NOTIF_STOP
+  end
+
   enum SysrepoSubscriptionOptions
     DEFAULT
   end

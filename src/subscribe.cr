@@ -25,7 +25,7 @@ event : Libsysrepo::SysrepoEvent, request_id : LibC::UInt32T, private_data : Voi
   # unbox the data passed in
   data_as_callback = Box(Callback).unbox(private_data)
   # call the callback
-  data_as_callback.module_change_cb.call(Session.new(session), module_name_str, xpath_str, event, request_id, data)
+  data_as_callback.module_change_cb.not_nil!.call(Session.new(session), module_name_str, xpath_str, event, request_id, data)
 }
 
 OPER_DATA_HIDDEN = ->( session : Libsysrepo::SessionContext*, module_name : LibC::Char*, path : LibC::Char*,
@@ -112,6 +112,30 @@ event : Libsysrepo::SysrepoEvent, request_id : LibC::UInt32T, output : Libsysrep
   0
 }
 
+EVENT_NOTIF_HIDDEN = ->( session : Libsysrepo::SessionContext*, event_notif_type : Libsysrepo::SysrepoEventNotificationType, path : LibC::Char*,
+values : Libsysrepo::SysrepoValue*, values_cnt : LibC::UInt32T, time : Libsysrepo::SysrepoTime, private_data : Void* )
+{
+  if path.null?
+    op_path_str = nil
+  else
+    op_path_str = String.new(path)
+  end
+
+  # pass blank private data for now
+  data = Pointer(Void).malloc(0)
+  # unbox the data passed in
+  data_as_callback = Box(Callback).unbox(private_data)
+
+  # convert input values to a crystallized structure
+  crystal_values = Array(CrystalSysrepoValue).new(values_cnt) { |i| convert_sysrepo_value_to_crystal_sysrepo_value(values + i) }
+
+  # call the callback
+  data_as_callback.event_notif_cb.not_nil!.call(Session.new(session), event_notif_type, op_path_str, crystal_values, time, data)
+
+
+  0
+}
+
 class Subscribe
   getter session : Session
   getter subscription : Libsysrepo::SubscriptionContext*
@@ -140,9 +164,6 @@ class Subscribe
     Libsysrepo.sr_oper_get_items_subscribe(@session.session, module_name, path, OPER_DATA_HIDDEN, boxed_data, opts, pointerof(@subscription) )
   end
 
-  # int sr_rpc_subscribe(sr_session_ctx_t *session, const char *xpath, sr_rpc_cb callback, void *private_data,
-  #       uint32_t priority, sr_subscr_options_t opts, sr_subscription_ctx_t **subscription);
-
   def sr_rpc_subscribe(xpath : String, external_callback, private_data : Void*, priority : UInt32, opts : Libsysrepo::SysrepoSubscriptionOptions)
     # build callback wrapper
     my_callback = Callback.new(external_callback)
@@ -150,6 +171,15 @@ class Subscribe
     boxed_data = Box.box(my_callback)
     # perform subscribe
     Libsysrepo.sr_rpc_subscribe(@session.session, xpath, RPC_HIDDEN, boxed_data, priority, opts, pointerof(@subscription) )
+  end
+
+  def event_notif_subscribe(module_name : String, xpath : String, external_callback, private_data : Void*, opts : Libsysrepo::SysrepoSubscriptionOptions)
+    # build callback wrapper
+    my_callback = Callback.new(external_callback)
+    # box the data to pass down to libsysrepo
+    boxed_data = Box.box(my_callback)
+    # perform subscribe
+    Libsysrepo.sr_event_notif_subscribe(@session.session, module_name, xpath, 0, 0, EVENT_NOTIF_HIDDEN, boxed_data, opts, pointerof(@subscription) )
   end
 
   def unsubscribe

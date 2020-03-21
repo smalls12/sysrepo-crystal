@@ -74,6 +74,18 @@ class Session
     Libsysrepo.sr_rpc_send(@session, path, input, input_cnt, 0, pointerof(output), pointerof(output_cnt))
   end
 
+  def event_notif_send(path, crystal_values)
+    sysrepo_values_count = crystal_values.size.to_u32
+    sysrepo_values = Libsysrepo.sr_get_value
+    Libsysrepo.sr_new_values(sysrepo_values_count, pointerof(sysrepo_values))
+
+    for x = 0, x < sysrepo_values_count, x += 1 do
+      convert_crystal_sysrepo_value_to_sysrepo_value(crystal_values[x], sysrepo_values + x)
+    end
+
+    Libsysrepo.sr_event_notif_send(@session, path, sysrepo_values, sysrepo_values_count)
+  end
+
   def session_stop()
     puts "Stop session..."
     Libsysrepo.sr_session_stop(@session)
