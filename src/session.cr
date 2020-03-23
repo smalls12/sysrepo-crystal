@@ -67,11 +67,26 @@ class Session
     Libsysrepo.sr_apply_changes(@session, timeout, wait)
   end
 
-  def rpc_send(path, input, input_cnt)
-    output = Libsysrepo.sr_get_value
-    output_cnt = uninitialized UInt32
+  def rpc_send(path, crystal_input_values, crystal_output_values)
+    # convert crystal sysrepo values int sysrepo values
+    sysrepo_input_values_count = crystal_input_values.size.to_u32
+    sysrepo_input_values = Libsysrepo.sr_get_value
+    Libsysrepo.sr_new_values(sysrepo_input_values_count, pointerof(sysrepo_input_values))
 
-    Libsysrepo.sr_rpc_send(@session, path, input, input_cnt, 0, pointerof(output), pointerof(output_cnt))
+    sysrepo_input_values_count.times do |index|
+      convert_crystal_sysrepo_value_to_sysrepo_value(crystal_input_values[index], sysrepo_input_values + index)
+    end
+
+    sysrepo_output_values_count = 0.to_u32
+    sysrepo_output_values = Libsysrepo.sr_get_value
+
+    Libsysrepo.sr_rpc_send(@session, path, sysrepo_input_values, sysrepo_input_values_count, 0, pointerof(sysrepo_output_values), pointerof(sysrepo_output_values_count))
+
+    sysrepo_output_values_count.times do |index|
+      crystal_output_values.push( convert_sysrepo_value_to_crystal_sysrepo_value(sysrepo_output_values + index) )
+    end
+
+    0
   end
 
   def event_notif_send(path, crystal_values)
